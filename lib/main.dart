@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 
 main() {
-  final ThemeData theme = ThemeData();
+  final ThemeData theme = ThemeData(
+      primaryColor: Colors.indigo,
+      brightness: Brightness.dark,
+      appBarTheme: const AppBarTheme(foregroundColor: Colors.white),
+      colorScheme: const ColorScheme(
+        brightness: Brightness.dark,
+        onPrimary: Colors.indigo,
+        onSecondary: Colors.indigoAccent,
+        primary: Colors.indigo,
+        secondary: Colors.indigoAccent,
+        background: Colors.black,
+        error: Colors.red,
+        onBackground: Colors.black12,
+        onError: Colors.green,
+        onSurface: Colors.blue,
+        surface: Colors.blueAccent,
+      ));
   runApp(MaterialApp(
     title: 'Simple Interest Calculator',
     home: const SIform(),
     debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.indigo,
-        colorScheme:
-            theme.colorScheme.copyWith(secondary: Colors.indigoAccent)),
+    theme: theme,
   ));
 }
 
