@@ -36,9 +36,13 @@ class SIform extends StatefulWidget {
 }
 
 class _SIformState extends State<SIform> {
-  var _currency = ['Naira', 'Dollar', 'Euros'];
+  final _currency = ['Naira', 'Dollar', 'Euros'];
   var _currentItemSelected = 'Naira';
   final _minpadding = 5.0;
+  TextEditingController principalController = TextEditingController();
+  TextEditingController roiController = TextEditingController();
+  TextEditingController termController = TextEditingController();
+  var displayResult = '';
   @override
   Widget build(BuildContext context) {
     TextStyle? textStyle = Theme.of(context).textTheme.titleLarge;
@@ -55,6 +59,7 @@ class _SIformState extends State<SIform> {
             child: TextField(
               style: textStyle,
               keyboardType: TextInputType.number,
+              controller: principalController,
               decoration: InputDecoration(
                   labelText: 'Principal',
                   hintText: 'Input the Principal e.g 1200',
@@ -69,6 +74,7 @@ class _SIformState extends State<SIform> {
             child: TextField(
               style: textStyle,
               keyboardType: TextInputType.number,
+              controller: roiController,
               decoration: InputDecoration(
                   labelText: 'Rate of Interest',
                   hintText: 'In Percentage',
@@ -86,6 +92,7 @@ class _SIformState extends State<SIform> {
                   child: TextField(
                     style: textStyle,
                     keyboardType: TextInputType.number,
+                    controller: termController,
                     decoration: InputDecoration(
                         labelText: 'Term',
                         hintText: 'Time in the years',
@@ -129,8 +136,15 @@ class _SIformState extends State<SIform> {
                       backgroundColor:
                           Theme.of(context).colorScheme.secondary, // foreground
                     ),
-                    child: const Text('Calculate'),
-                    onPressed: () {},
+                    child: const Text(
+                      'Calculate',
+                      textScaleFactor: 1.5,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        displayResult = _calculateTotalReturns();
+                      });
+                    },
                   ),
                 ),
                 Expanded(
@@ -140,8 +154,15 @@ class _SIformState extends State<SIform> {
                       backgroundColor:
                           Theme.of(context).primaryColorDark, // foreground
                     ),
-                    child: const Text('Reset'),
-                    onPressed: () {},
+                    child: const Text(
+                      'Reset',
+                      textScaleFactor: 1.5,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _reset();
+                      });
+                    },
                   ),
                 ),
               ],
@@ -149,7 +170,10 @@ class _SIformState extends State<SIform> {
           ),
           Padding(
             padding: EdgeInsets.only(top: _minpadding, bottom: _minpadding),
-            child: const Text('TOdo Text'),
+            child: Text(
+              displayResult,
+              textScaleFactor: 1.5,
+            ),
           ),
         ]),
       ),
@@ -167,5 +191,26 @@ class _SIformState extends State<SIform> {
       margin: EdgeInsets.all(_minpadding * 10),
       child: image,
     );
+  }
+
+  String _calculateTotalReturns() {
+    double principal = double.parse(principalController.text);
+
+    double roi = double.parse(roiController.text);
+
+    double term = double.parse(termController.text);
+    double totalAmountPayable = principal + (principal * roi * term) / 100;
+    String result =
+        'After $term years, your investment would be $totalAmountPayable $_currentItemSelected';
+
+    return result;
+  }
+
+  void _reset() {
+    principalController.text = '';
+    roiController.text = '';
+    termController.text = '';
+    displayResult = '';
+    _currentItemSelected = _currency[0];
   }
 }
